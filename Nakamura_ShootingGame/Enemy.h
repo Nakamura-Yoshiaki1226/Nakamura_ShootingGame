@@ -8,9 +8,13 @@ private:
 	int point;
 
 public:
+	Enemy(T_location location);
+
+
+public:
 	virtual void Update()override;
 	virtual void Draw()override;
-	virtual void Hit()override;
+	virtual void Hit(int damage)override;
 	bool HpCHeck();
 	int GetPoint();
 };

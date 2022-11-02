@@ -15,8 +15,28 @@ Player::Player(T_location location)
 
 void Player::Update() 
 {
+	//キーボードで移動
 	T_location newLocation = GetLocation();
-	newLocation.x += 1;
+	if (KeyManager::OnKeyPressed(KEY_INPUT_W))
+	{
+		newLocation.y -= speed.y;
+	}
+
+	if (KeyManager::OnKeyPressed(KEY_INPUT_A))
+	{
+		newLocation.x -= speed.x;
+	}
+
+	if (KeyManager::OnKeyPressed(KEY_INPUT_S))
+	{
+		newLocation.y += speed.y;
+	}
+
+	if (KeyManager::OnKeyPressed(KEY_INPUT_D))
+	{
+		newLocation.x += speed.x;
+	}
+
 	SetLocation(newLocation);
 
 	int bulletCount;
@@ -27,9 +47,16 @@ void Player::Update()
 			break;
 		}
 		bullets[bulletCount]->Update();
+
+		//画面外に行ったら弾を消す
+		if (bullets[bulletCount]->isScreenOut())
+		{
+			DeleteBullet(bulletCount);
+			bulletCount--;
+		}
 	}
 
-	if (KeyManager::OnMouseClicked(MOUSE_INPUT_LEFT))//クリックするごとに玉が発射される
+	if (KeyManager::OnMousePressed(MOUSE_INPUT_LEFT))//クリックするごとに玉が発射される
 	{
 			if (bulletCount<30 && bullets[bulletCount] == nullptr)
 			{
@@ -50,7 +77,7 @@ void Player::Draw()
 		bullets[bulletCount]->Draw();
 	}
 }
-void Player::Hit() 
+void Player::Hit(int damage)
 {
 
 }

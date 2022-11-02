@@ -1,5 +1,6 @@
 #pragma once
 #include "BulletsBase.h"
+
 class StraightBullets : public BulletsBase
 {
 public:
@@ -8,5 +9,6 @@ public:
 public:
 	virtual void Update() override;
 	virtual void Draw() override;
+	virtual bool isScreenOut() override;
 };
 
