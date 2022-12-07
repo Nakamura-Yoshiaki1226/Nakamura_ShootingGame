@@ -1,15 +1,15 @@
 #include "StraightBullets.h"
 #include"DxLib.h"
 
-StraightBullets::StraightBullets(T_location location)
-	:BulletsBase(location, 5.f, 1, T_location{ 0,2 })
+StraightBullets::StraightBullets(T_location location,T_location speed)
+	:BulletsBase(location, 5.f, 1, speed)
 {
 }
 
 void StraightBullets::Update()
 {
 	T_location newLocation = GetLocation();
-	newLocation.y -= speed.y;
+	newLocation.y += speed.y;
 	SetLocation(newLocation);
 }
 
@@ -21,5 +21,11 @@ void StraightBullets::Draw()
 bool StraightBullets::isScreenOut()
 {
 	bool ret = ((GetLocation().y +GetRadius())<= 0);
+	if (ret) 
+	{
+		return ret;
+	}
+
+	/*ret = (SCREEN_HEIGHT <= (GetLocation().y - GetRadius()));*/
 	return ret;
 }

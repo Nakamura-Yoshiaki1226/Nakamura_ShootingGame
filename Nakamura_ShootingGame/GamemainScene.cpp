@@ -1,4 +1,5 @@
 #include "GamemainScene.h"
+#include"Recovery.h"
 
 GamemainScene::GamemainScene()
 {
@@ -10,7 +11,16 @@ GamemainScene::GamemainScene()
 	{
 		enemy[i] = nullptr;
 	}
-	enemy[0] = new Enemy(T_location{ 200,0 });
+	enemy[0] = new Enemy(T_location{ 250,250 });
+	/*enemy[0] = new Enemy(T_location{ SCREEN_WIDTH/2,SCREEN_HEIGHT/2});*/
+
+
+	items = new ItemBase * [10];
+	for (int i = 0; i < 10; i++)
+	{
+		items[i] = nullptr;
+	}
+
 }
 //描画以外の更新を実装する
 void GamemainScene::Update() 
@@ -25,6 +35,15 @@ void GamemainScene::Update()
 			break;
 		}
 		enemy[enemyCount]->Update();
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (items[i] == nullptr)
+		{
+			break;
+		}
+		items[i]->Update();
 	}
 
 	BulletsBase** bullet = player->GetBullets();
@@ -55,13 +74,96 @@ void GamemainScene::Update()
 			//エネミーのHPが0になったら、エネミーを削除する
 			if (enemy[enemyCount]->HpCHeck())
 			{
-				//エネミーの削除
+				for (int i = 0; i < 10; i++)
+				{
+					if (items[i] == nullptr)
+					{
+						items[i] = new Recovery(enemy[enemyCount]->GetLocation());
+						break;
+					}
+				}
 
+				//スコアの加算
+				player->AddScore(enemy[enemyCount]->GetPoint());
+
+				//エネミーの削除
+				delete enemy[enemyCount];
+				enemy[enemyCount] = nullptr;
+
+				for (int i = enemyCount + 1; i < 10; i++)
+				{
+					if (enemy[i] == nullptr)
+					{
+						break;
+					}
+					enemy[i - 1] = enemy[i];
+					enemy[i] = nullptr;
+				}
+
+				enemyCount--;
+				break;//バレットカウントを終了しますよというbreak
 			}
 		}
 
 	}
   }
+
+
+	for (enemyCount = 0; enemyCount < 10; enemyCount++) 
+	{
+		if (enemy[enemyCount] == nullptr)
+		{
+			break;
+		}
+		bullet = enemy[enemyCount]->GetBullets();
+
+		//弾のループ判定
+		for (int i = 0; i < 30; i++)
+		{
+			if (bullet[i] == nullptr)
+			{
+				break;
+			}
+			//当たり判定(ダメージを与える)
+			if (player->HitSphere(bullet[i]))
+			{
+				player->Hit(bullet[i]->GetDamage());
+
+				enemy[enemyCount]->DeleteBullet(i);
+				i--;
+			}
+
+		}
+	}
+	
+	//回復アイテムが出て、playerに当たると消える処理
+	for (int itemCount = 0; itemCount < 10; itemCount++)
+	{
+		if (items[itemCount] == nullptr)
+		{
+			break;
+		}
+		if (items[itemCount]->HitSphere(player) == true)
+		{
+
+			//回復処理
+			player->Hit(items[itemCount]);
+
+			delete items[itemCount];
+			items[itemCount] = nullptr;
+
+			for (int i = itemCount + 1; i < 10; i++)
+			{
+				if (items[i] == nullptr)
+				{
+					break;
+				}
+				items[i - 1] = items[i];
+				items[i] = nullptr;
+			}
+			itemCount--;
+		}
+	}
 }
 
 //描画に関することを実装する
@@ -76,6 +178,15 @@ void GamemainScene::Draw() const
 			break;
 		}
 		enemy[enemyCount]->Draw();
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (items[i] == nullptr)
+		{
+			break;
+		}
+		items[i]->Draw();
 	}
 }
 

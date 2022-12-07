@@ -1,11 +1,14 @@
 #pragma once
 #include "CharaBase.h"
 
+//#define _ENEMY_BULLET_ALL_100
+
 class Enemy : public CharaBase
 {
 private:
 	int hp;
 	int point;
+	int shotNum;
 
 public:
 	Enemy(T_location location);

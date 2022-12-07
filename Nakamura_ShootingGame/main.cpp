@@ -13,6 +13,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	ChangeWindowMode(TRUE);		// ウィンドウモードで起動
 
+	//windowsSize
+	SetGraphMode(640, 480, 16);
+	int SCREEN_WIDTH = 640;
+	int SCREEN_HEIGHT = 480;
+	/*int SCREEN_COLOR_BIT_16;*/
+
+
+
+	/*SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR_BIT_16);*/
+
 	if (DxLib_Init() == -1) return -1;	// DXライブラリの初期化処理
 
 	SetDrawScreen(DX_SCREEN_BACK);	// 描画先画面を裏にする
