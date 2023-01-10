@@ -20,5 +20,6 @@ public:
 	virtual void Hit(int damage)override;
 	bool HpCHeck();
 	int GetPoint();
+	void Move();
 };
 
